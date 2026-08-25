@@ -3,8 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TAPIN — Cartes NFC & QR code pour commerces et événements</title>
-<meta name="description" content="TAPIN équipe les commerces et les organisateurs d'événements de cartes NFC et QR code : avis Google, Instagram, parcours Strava, programme de soirée — un simple tap.">
+<title>Sesame — Cartes NFC & QR code pour commerces et événements</title>
+<meta name="description" content="Sesame équipe les commerces et les organisateurs d'événements de cartes NFC et QR code : avis Google, Instagram, parcours Strava, programme de soirée — un simple tap.">
+
+<!-- Balises Open Graph pour le partage social -->
+<meta property="og:title" content="Sesame — Cartes NFC & QR code">
+<meta property="og:description" content="Le sésame qui ouvre vos avis, vos comptes, vos soirées d'un simple tap.">
+<meta property="og:image" content="image_b22b03.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.sesame.fr"> <!-- À remplacer par votre vrai domaine -->
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -116,7 +124,7 @@
     border-bottom:1px solid var(--paper-200);
   }
   .nav{display:flex;align-items:center;justify-content:space-between;height:76px;}
-  .logo{font-family:'Space Grotesk';font-weight:700;font-size:22px;display:flex;align-items:center;gap:8px;}
+  .logo{font-family:'Space Grotesk';font-weight:700;font-size:22px;display:flex;align-items:center;gap:8px;text-transform:uppercase;}
   .logo-dot{width:10px;height:10px;border-radius:3px;background:var(--violet-500);transform:rotate(15deg);}
   .nav-links{display:flex;align-items:center;gap:32px;}
   .nav-links a{font-size:15px;font-weight:500;color:var(--text-on-paper-muted);}
@@ -160,47 +168,13 @@
     color:var(--text-on-paper-muted);transition:.18s ease;
   }
   .mode-toggle button.active{background:var(--ink-950);color:var(--paper-50);}
-
-  .device-card{
-    border-radius:var(--radius-lg);
-    padding:32px;
-    background:var(--ink-950);
-    color:var(--text-on-ink);
-    min-height:360px;
-    display:flex;flex-direction:column;justify-content:space-between;
-    box-shadow:var(--shadow-card);
-    transition:background .25s ease;
-    position:relative;
-    overflow:hidden;
+  
+  /* Ajout pour les photos réelles */
+  .real-photo {
+  width: 100%; /* S'assure que l'image remplit la largeur disponible */
+  border-radius: var(--radius-lg); /* Conserve vos coins arrondis */
+  box-shadow: var(--shadow-card); /* Conserve l'ombre */
   }
-  .device-card::after{
-    content:"";position:absolute;inset:0;
-    background:radial-gradient(circle at 85% 15%, color-mix(in srgb, var(--accent) 30%, transparent), transparent 60%);
-    pointer-events:none;
-  }
-  .device-top{display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:1;}
-  .device-chip{
-    width:46px;height:46px;border-radius:12px;background:var(--accent);
-    display:flex;align-items:center;justify-content:center;color:var(--ink-950);
-  }
-  .device-tag{
-    font-size:12px;font-weight:600;padding:6px 12px;border-radius:999px;
-    background:rgba(245,243,239,0.1);color:var(--text-on-ink-muted);
-    border:1px solid rgba(245,243,239,0.15);
-  }
-  .device-mid{position:relative;z-index:1;}
-  .device-mid .display{font-size:26px;color:var(--paper-50);margin-bottom:8px;}
-  .device-mid p{color:var(--text-on-ink-muted);font-size:14px;}
-  .device-bottom{
-    position:relative;z-index:1;
-    display:flex;align-items:center;justify-content:space-between;
-    background:rgba(245,243,239,0.06);
-    border:1px solid rgba(245,243,239,0.12);
-    border-radius:var(--radius-md);
-    padding:14px 16px;
-  }
-  .device-bottom .label{font-size:12px;color:var(--text-on-ink-muted);}
-  .device-bottom .value{font-family:'Space Grotesk';font-weight:600;color:var(--accent);font-size:15px;}
 
   /* ---------- SOCIAL PROOF ---------- */
   .proof-bar{
@@ -257,43 +231,6 @@
   }
   .feature-point h3{font-size:17px;margin-bottom:6px;}
   .feature-point p{font-size:14.5px;color:var(--text-on-paper-muted);}
-
-  .poster-mock{
-    border-radius:var(--radius-lg);padding:34px;background:var(--ink-950);color:var(--text-on-ink);
-    min-height:420px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;
-  }
-  .poster-mock::before{
-    content:"";position:absolute;inset:0;
-    background:radial-gradient(circle at 15% 85%, rgba(204,255,102,0.18), transparent 55%);
-  }
-  .poster-top{position:relative;z-index:1;}
-  .poster-top .display{font-size:30px;line-height:1.05;color:var(--paper-50);}
-  .poster-top .sub{color:var(--lime-400);font-size:13px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;margin-top:10px;display:block;}
-  .poster-qr{
-    position:relative;z-index:1;
-    align-self:flex-start;
-    background:var(--paper-50);color:var(--ink-950);
-    border-radius:var(--radius-md);padding:16px 18px;
-    display:flex;align-items:center;gap:14px;
-  }
-  .qr-swatch{width:52px;height:52px;border-radius:8px;background:
-    repeating-conic-gradient(#0B0A10 0% 25%, #FAF9F6 0% 50%) 0 0/13px 13px;}
-  .poster-qr .ptxt{font-size:12px;color:var(--text-on-paper-muted);}
-  .poster-qr .pval{font-family:'Space Grotesk';font-weight:700;font-size:14px;}
-
-  .card-mock{
-    border-radius:var(--radius-lg);padding:34px;background:linear-gradient(155deg, var(--paper-100), var(--paper-50));
-    border:1px solid var(--paper-200);
-    min-height:420px;display:flex;flex-direction:column;justify-content:space-between;
-  }
-  .card-mock .display{font-size:28px;}
-  .stars{color:var(--gold-500);font-size:20px;letter-spacing:2px;margin-top:12px;}
-  .review-pop{
-    background:var(--paper-50);border:1px solid var(--paper-200);border-radius:var(--radius-md);
-    padding:16px 18px;box-shadow:var(--shadow-card);
-  }
-  .review-pop .ptxt{font-size:12px;color:var(--text-on-paper-muted);}
-  .review-pop .pval{font-family:'Space Grotesk';font-weight:700;font-size:14px;}
 
   /* ---------- TESTIMONIALS ---------- */
   .testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
@@ -376,10 +313,6 @@
   }
   input::placeholder, textarea::placeholder{color:rgba(171,166,184,0.6);}
   textarea{resize:vertical;min-height:110px;}
-  .form-note{font-size:12.5px;color:var(--text-on-ink-muted);margin-top:4px;}
-  .form-status{font-size:13.5px;margin-top:10px;min-height:18px;}
-  .form-status.ok{color:var(--lime-400);}
-  .form-status.err{color:#F5A3A3;}
 
   /* ---------- FOOTER ---------- */
   footer{padding:56px 0 32px;border-top:1px solid var(--paper-200);}
@@ -401,7 +334,7 @@
 
 <header>
   <div class="wrap nav">
-    <div class="logo"><span class="logo-dot"></span>TAPIN</div>
+    <div class="logo"><span class="logo-dot"></span>SESAME</div>
     <nav class="nav-links" id="navLinks">
       <a href="#comment-ca-marche">Comment ça marche</a>
       <a href="#offres">Nos offres</a>
@@ -410,7 +343,7 @@
       <a href="#contact">Contact</a>
     </nav>
     <div class="nav-cta">
-      <a href="#contact" class="btn btn-ghost" style="padding:10px 20px;min-height:auto;">Demander un devis</a>
+      <a href="#contact" class="btn btn-ghost" style="padding:10px 20px;min-height:auto;">Nous contacter</a>
       <button class="burger" id="burgerBtn" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navLinks">
         <span></span><span></span><span></span>
       </button>
@@ -424,7 +357,7 @@
     <div>
       <span class="eyebrow">Cartes & stickers NFC + QR code</span>
       <h1>Un tap suffit pour laisser un avis, suivre un compte ou lancer une soirée.</h1>
-      <p class="hero-sub">TAPIN équipe les commerces et les organisateurs d'événements de supports NFC et QR code intelligents : avis Google en un geste pour les uns, parcours Strava ou programme de soirée pour les autres.</p>
+      <p class="hero-sub">Sesame équipe les commerces et les organisateurs d'événements de supports NFC et QR code intelligents : avis Google en un geste pour les uns, parcours Strava ou programme de soirée pour les autres.</p>
       <div class="hero-ctas">
         <a href="#offres" class="btn btn-primary">Voir les offres Commerce</a>
         <a href="#offres" class="btn btn-ghost">Voir les offres Événements</a>
@@ -437,22 +370,8 @@
         <button type="button" class="active" data-mode="commerce" role="tab" aria-selected="true">Commerce</button>
         <button type="button" data-mode="event" role="tab" aria-selected="false">Soirée</button>
       </div>
-      <div class="device-card" id="heroDevice">
-        <div class="device-top">
-          <div class="device-chip" id="deviceChip">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12a8 8 0 0 1 16 0"/><path d="M7.5 12a4.5 4.5 0 0 1 9 0"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg>
-          </div>
-          <span class="device-tag" id="deviceTag">Carte comptoir</span>
-        </div>
-        <div class="device-mid">
-          <p class="display" id="deviceTitle">Approchez votre téléphone</p>
-          <p id="deviceSub">La fiche avis Google s'ouvre directement — sans chercher, sans taper.</p>
-        </div>
-        <div class="device-bottom">
-          <span class="label" id="deviceBottomLabel">Redirige vers</span>
-          <span class="value" id="deviceBottomValue">Avis Google ★★★★★</span>
-        </div>
-      </div>
+      <!-- Remplacement par une vraie photo -->
+      <img id="heroImg" src="chemin/vers/votre/photo-hero-commerce.jpg" alt="Carte Sesame en situation" class="real-photo">
     </div>
   </div>
 </section>
@@ -532,32 +451,15 @@
             <div><h3>Suivi des scans</h3><p>Une estimation du nombre de tap et de scans, pour savoir si le support est bien placé.</p></div>
           </div>
         </div>
-        <div class="card-mock">
-          <div>
-            <p class="display">Café des Arts</p>
-            <p style="color:var(--text-on-paper-muted);font-size:14px;margin-top:6px;">Carte NFC comptoir</p>
-            <div class="stars">★★★★★</div>
-          </div>
-          <div class="review-pop">
-            <p class="ptxt">Un tap ouvre</p>
-            <p class="pval">Laisser un avis Google</p>
-          </div>
-        </div>
+        <!-- Remplacement par une vraie photo -->
+        <img src="images/image-commerce.jpg" alt="Carte NFC Sesame sur un comptoir" class="real-photo">
       </div>
     </div>
 
     <div class="tab-panel" data-panel="event">
       <div class="feature-grid">
-        <div class="poster-mock">
-          <div class="poster-top">
-            <p class="display">Sunday Run Club</p>
-            <span class="sub">Affiche NFC + QR</span>
-          </div>
-          <div class="poster-qr">
-            <div class="qr-swatch"></div>
-            <div><p class="ptxt">Un scan ouvre</p><p class="pval">Le parcours Strava du jour</p></div>
-          </div>
-        </div>
+        <!-- Remplacement par une vraie photo -->
+        <img src="images/sesame-info.png" alt="Affiche événementielle NFC Sesame" class="real-photo">
         <div class="feature-points">
           <div class="feature-point">
             <div class="ico">🏃</div>
@@ -634,7 +536,7 @@
           <li><span class="tick">✓</span> Lien vers votre fiche avis Google</li>
           <li><span class="tick">✓</span> Support et mise à jour du lien pendant 12 mois</li>
         </ul>
-        <a href="#contact" class="btn btn-ghost btn-block">Demander un devis</a>
+        <a href="https://buy.stripe.com/test_placeholder_essentiel" class="btn btn-ghost btn-block" target="_blank" rel="noopener">Acheter maintenant</a>
       </div>
 
       <div class="price-card highlight">
@@ -650,7 +552,7 @@
           <li><span class="tick">✓</span> Estimation du nombre de scans</li>
           <li><span class="tick">✓</span> Mises à jour du lien illimitées</li>
         </ul>
-        <a href="#contact" class="btn btn-accent btn-block">Demander un devis</a>
+        <a href="https://buy.stripe.com/test_placeholder_pro" class="btn btn-accent btn-block" target="_blank" rel="noopener">Acheter maintenant</a>
       </div>
 
       <div class="price-card">
@@ -713,10 +615,11 @@
         <h2>On équipe votre commerce ou votre prochaine soirée ?</h2>
         <p>Décrivez votre projet en quelques lignes — nombre de points de vente, type d'événement, quantité souhaitée — et vous recevez un devis personnalisé sous 24 à 48h.</p>
         <div class="contact-direct">
-          <a href="mailto:contact@tapin.fr">contact@tapin.fr</a>
+          <a href="mailto:contact@sesame.fr">contact@sesame.fr</a>
         </div>
       </div>
-      <form id="contactForm">
+      <!-- Formulaire utilisant Netlify Forms -->
+      <form id="contactForm" name="contact" method="POST" data-netlify="true">
         <div class="form-grid">
           <div class="field">
             <label for="fname">Nom</label>
@@ -740,8 +643,6 @@
           </div>
         </div>
         <button type="submit" class="btn btn-accent btn-block" style="margin-top:18px;">Envoyer la demande</button>
-        <p class="form-note">En envoyant ce formulaire, votre application de messagerie s'ouvre avec un message pré-rempli à destination de contact@tapin.fr.</p>
-        <p class="form-status" id="formStatus" role="status"></p>
       </form>
     </div>
   </div>
@@ -751,7 +652,7 @@
   <div class="wrap">
     <div class="footer-grid">
       <div>
-        <div class="logo"><span class="logo-dot"></span>TAPIN</div>
+        <div class="logo"><span class="logo-dot"></span>SESAME</div>
         <p style="color:var(--text-on-paper-muted);font-size:14px;margin-top:12px;max-width:32ch;">Cartes NFC et QR code pour commerces et événements.</p>
       </div>
       <div class="footer-cols">
@@ -764,13 +665,13 @@
         </div>
         <div class="footer-col">
           <h4>Contact</h4>
-          <a href="mailto:contact@tapin.fr">contact@tapin.fr</a>
-          <a href="#contact">Demander un devis</a>
+          <a href="mailto:contact@sesame.fr">contact@sesame.fr</a>
+          <a href="#contact">Nous contacter</a>
         </div>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 TAPIN. Tous droits réservés.</span>
+      <span>© 2026 Sesame. Tous droits réservés.</span>
       <span>Mentions légales · CGV</span>
     </div>
   </div>
@@ -789,33 +690,13 @@
     burger.setAttribute('aria-expanded', 'false');
   }));
 
-  // ---- Toggle hero Commerce / Soirée ----
+  // ---- Toggle hero Commerce / Soirée avec de vraies images ----
   const modeButtons = document.querySelectorAll('.mode-toggle button');
-  const heroDevice = document.getElementById('heroDevice');
-  const deviceChip = document.getElementById('deviceChip');
-  const deviceTag = document.getElementById('deviceTag');
-  const deviceTitle = document.getElementById('deviceTitle');
-  const deviceSub = document.getElementById('deviceSub');
-  const deviceBottomLabel = document.getElementById('deviceBottomLabel');
-  const deviceBottomValue = document.getElementById('deviceBottomValue');
+  const heroImg = document.getElementById('heroImg');
 
-  const modes = {
-    commerce: {
-      accent: 'var(--gold-400)',
-      tag: 'Carte comptoir',
-      title: 'Approchez votre téléphone',
-      sub: "La fiche avis Google s'ouvre directement — sans chercher, sans taper.",
-      bottomLabel: 'Redirige vers',
-      bottomValue: 'Avis Google ★★★★★'
-    },
-    event: {
-      accent: 'var(--lime-400)',
-      tag: 'Affiche évènement',
-      title: 'Scannez avant d\u2019entrer',
-      sub: "Le programme de la soirée ou le parcours du run s'affiche instantanément.",
-      bottomLabel: 'Redirige vers',
-      bottomValue: 'Parcours Strava du jour'
-    }
+  const modeImages = {
+    commerce: 'images/image-essential2.jpg',
+    event: 'images/image-pro.jpg'
   };
 
   modeButtons.forEach(btn => {
@@ -823,14 +704,9 @@
       modeButtons.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
       btn.classList.add('active');
       btn.setAttribute('aria-selected','true');
-      const m = modes[btn.dataset.mode];
-      heroDevice.style.setProperty('--accent', m.accent);
-      document.documentElement.style.setProperty('--accent', m.accent);
-      deviceTag.textContent = m.tag;
-      deviceTitle.textContent = m.title;
-      deviceSub.textContent = m.sub;
-      deviceBottomLabel.textContent = m.bottomLabel;
-      deviceBottomValue.textContent = m.bottomValue;
+      
+      // Met à jour la source de l'image
+      heroImg.src = modeImages[btn.dataset.mode];
     });
   });
 
@@ -847,35 +723,7 @@
     });
   });
 
-  // ---- Formulaire de contact (mailto, pas de backend) ----
-  const form = document.getElementById('contactForm');
-  const formStatus = document.getElementById('formStatus');
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = document.getElementById('fname').value.trim();
-    const email = document.getElementById('femail').value.trim();
-    const type = document.getElementById('ftype').value;
-    const message = document.getElementById('fmessage').value.trim();
-
-    if(!name || !email || !message){
-      formStatus.textContent = "Merci de compléter tous les champs obligatoires.";
-      formStatus.className = "form-status err";
-      return;
-    }
-
-    const subject = encodeURIComponent(`Demande de devis TAPIN — ${type}`);
-    const body = encodeURIComponent(
-`Nom : ${name}
-Email : ${email}
-Type de projet : ${type}
-
-Message :
-${message}`
-    );
-    window.location.href = `mailto:contact@tapin.fr?subject=${subject}&body=${body}`;
-    formStatus.textContent = "Votre messagerie va s'ouvrir avec la demande pré-remplie.";
-    formStatus.className = "form-status ok";
-  });
+  // Le script de gestion du mailto a été retiré, Netlify gère l'envoi automatiquement.
 </script>
 
 </body>
