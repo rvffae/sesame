@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TAPIN — Cartes NFC & QR code pour commerces et événements</title>
+<meta name="description" content="TAPIN équipe les commerces et les organisateurs d'événements de cartes NFC et QR code : avis Google, Instagram, parcours Strava, programme de soirée — un simple tap.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* --- Neutres --- */
+    --paper-50:#FAF9F6;
+    --paper-100:#F2F0EA;
+    --paper-200:#E7E3D9;
+    --ink-950:#0B0A10;
+    --ink-900:#16141F;
+    --ink-800:#211E2C;
+    --ink-700:#2E2A3B;
+    --text-on-paper:#1B1A22;
+    --text-on-paper-muted:#5B5766;
+    --text-on-ink:#F5F3EF;
+    --text-on-ink-muted:#ABA6B8;
+
+    /* --- Marque --- */
+    --violet-700:#5B21B6;
+    --violet-600:#6D28D9;
+    --violet-500:#7C3AED;
+    --violet-400:#9B6BF0;
+
+    /* --- Accent Commerce (avis/étoiles) --- */
+    --gold-500:#D9A227;
+    --gold-400:#EAB74C;
+    --gold-300:#F3CE7C;
+
+    /* --- Accent Soirée/Événement (énergie/nuit) --- */
+    --lime-500:#B8F23D;
+    --lime-400:#CCFF66;
+    --lime-300:#DEFF9C;
+
+    /* --- Sémantique --- */
+    --success:#1E9E5A;
+    --warning:#C77D0A;
+    --error:#D23B3B;
+
+    --radius-sm:8px;
+    --radius-md:14px;
+    --radius-lg:22px;
+    --shadow-card: 0 1px 2px rgba(20,16,10,0.04), 0 8px 24px -8px rgba(20,16,10,0.12);
+    --max-w:1180px;
+
+    --accent: var(--gold-400);
+    --accent-dark: var(--gold-500);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    background:var(--paper-50);
+    color:var(--text-on-paper);
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    letter-spacing:-0.01em;
+    line-height:1.05;
+    margin:0;
+  }
+  p{margin:0;line-height:1.55;}
+  a{color:inherit;text-decoration:none;}
+  ul{margin:0;padding:0;list-style:none;}
+  img,svg{display:block;max-width:100%;}
+  button{font-family:inherit;cursor:pointer;}
+
+  .wrap{max-width:var(--max-w);margin:0 auto;padding:0 24px;}
+  section{padding:88px 0;}
+  @media (max-width:768px){ section{padding:56px 0;} }
+
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:'Space Grotesk',sans-serif;
+    font-size:13px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;
+    color:var(--violet-600);
+    margin-bottom:14px;
+  }
+  .eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--violet-500);}
+
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    padding:14px 26px;border-radius:999px;border:none;
+    font-weight:600;font-size:15px;
+    transition:transform .15s ease, box-shadow .15s ease;
+    min-height:48px;
+  }
+  .btn:active{transform:scale(0.97);}
+  .btn-primary{background:var(--ink-950);color:var(--paper-50);}
+  .btn-primary:hover{box-shadow:0 8px 20px -6px rgba(11,10,16,0.45);}
+  .btn-ghost{background:transparent;color:var(--ink-950);border:1.5px solid var(--ink-950);}
+  .btn-ghost:hover{background:var(--ink-950);color:var(--paper-50);}
+  .btn-accent{background:var(--accent);color:var(--ink-950);}
+  .btn-accent:hover{box-shadow:0 8px 20px -6px rgba(217,162,39,0.5);}
+  .btn-block{width:100%;}
+  .btn:focus-visible, a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible{
+    outline:3px solid var(--violet-400); outline-offset:2px;
+  }
+
+  /* ---------- NAV ---------- */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(250,249,246,0.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--paper-200);
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;height:76px;}
+  .logo{font-family:'Space Grotesk';font-weight:700;font-size:22px;display:flex;align-items:center;gap:8px;}
+  .logo-dot{width:10px;height:10px;border-radius:3px;background:var(--violet-500);transform:rotate(15deg);}
+  .nav-links{display:flex;align-items:center;gap:32px;}
+  .nav-links a{font-size:15px;font-weight:500;color:var(--text-on-paper-muted);}
+  .nav-links a:hover{color:var(--ink-950);}
+  .nav-cta{display:flex;align-items:center;gap:16px;}
+  .burger{display:none;background:none;border:none;padding:8px;}
+  .burger span{display:block;width:22px;height:2px;background:var(--ink-950);margin:5px 0;transition:.2s;}
+
+  @media (max-width:900px){
+    .nav-links{
+      position:fixed;top:76px;left:0;right:0;bottom:0;
+      background:var(--paper-50);
+      flex-direction:column;align-items:flex-start;gap:0;
+      padding:16px 24px;
+      transform:translateY(-8px);opacity:0;pointer-events:none;
+      transition:opacity .18s ease, transform .18s ease;
+    }
+    .nav-links.open{opacity:1;transform:translateY(0);pointer-events:auto;}
+    .nav-links a{width:100%;padding:16px 0;border-bottom:1px solid var(--paper-200);}
+    .nav-cta .btn-ghost{display:none;}
+    .burger{display:block;}
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{padding-top:64px;padding-bottom:40px;}
+  .hero-grid{display:grid;grid-template-columns:1.05fr 0.95fr;gap:56px;align-items:center;}
+  @media (max-width:960px){ .hero-grid{grid-template-columns:1fr;gap:40px;} }
+
+  .hero h1{font-size:clamp(34px,4.6vw,56px);}
+  .hero-sub{margin-top:20px;font-size:18px;color:var(--text-on-paper-muted);max-width:52ch;}
+  .hero-ctas{display:flex;flex-wrap:wrap;gap:14px;margin-top:32px;}
+  .hero-note{margin-top:16px;font-size:13px;color:var(--text-on-paper-muted);}
+
+  .hero-visual{position:relative;}
+  .mode-toggle{
+    display:inline-flex;background:var(--paper-100);border-radius:999px;padding:4px;margin-bottom:22px;
+    border:1px solid var(--paper-200);
+  }
+  .mode-toggle button{
+    border:none;background:transparent;padding:10px 18px;border-radius:999px;font-weight:600;font-size:14px;
+    color:var(--text-on-paper-muted);transition:.18s ease;
+  }
+  .mode-toggle button.active{background:var(--ink-950);color:var(--paper-50);}
+
+  .device-card{
+    border-radius:var(--radius-lg);
+    padding:32px;
+    background:var(--ink-950);
+    color:var(--text-on-ink);
+    min-height:360px;
+    display:flex;flex-direction:column;justify-content:space-between;
+    box-shadow:var(--shadow-card);
+    transition:background .25s ease;
+    position:relative;
+    overflow:hidden;
+  }
+  .device-card::after{
+    content:"";position:absolute;inset:0;
+    background:radial-gradient(circle at 85% 15%, color-mix(in srgb, var(--accent) 30%, transparent), transparent 60%);
+    pointer-events:none;
+  }
+  .device-top{display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:1;}
+  .device-chip{
+    width:46px;height:46px;border-radius:12px;background:var(--accent);
+    display:flex;align-items:center;justify-content:center;color:var(--ink-950);
+  }
+  .device-tag{
+    font-size:12px;font-weight:600;padding:6px 12px;border-radius:999px;
+    background:rgba(245,243,239,0.1);color:var(--text-on-ink-muted);
+    border:1px solid rgba(245,243,239,0.15);
+  }
+  .device-mid{position:relative;z-index:1;}
+  .device-mid .display{font-size:26px;color:var(--paper-50);margin-bottom:8px;}
+  .device-mid p{color:var(--text-on-ink-muted);font-size:14px;}
+  .device-bottom{
+    position:relative;z-index:1;
+    display:flex;align-items:center;justify-content:space-between;
+    background:rgba(245,243,239,0.06);
+    border:1px solid rgba(245,243,239,0.12);
+    border-radius:var(--radius-md);
+    padding:14px 16px;
+  }
+  .device-bottom .label{font-size:12px;color:var(--text-on-ink-muted);}
+  .device-bottom .value{font-family:'Space Grotesk';font-weight:600;color:var(--accent);font-size:15px;}
+
+  /* ---------- SOCIAL PROOF ---------- */
+  .proof-bar{
+    border-top:1px solid var(--paper-200);border-bottom:1px solid var(--paper-200);
+    padding:32px 0;
+  }
+  .proof-label{font-size:13px;color:var(--text-on-paper-muted);text-align:center;margin-bottom:20px;font-weight:500;}
+  .proof-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;}
+  .chip{
+    display:flex;align-items:center;gap:8px;
+    padding:10px 18px;border-radius:999px;background:var(--paper-100);
+    font-size:14px;font-weight:600;color:var(--text-on-paper);border:1px solid var(--paper-200);
+  }
+
+  /* ---------- PROBLEM / SOLUTION ---------- */
+  .problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;}
+  @media (max-width:860px){ .problem-grid{grid-template-columns:1fr;gap:36px;} }
+  .problem-grid h2{font-size:clamp(26px,3vw,34px);margin-bottom:20px;}
+  .pain-list li{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--paper-200);font-size:15px;color:var(--text-on-paper-muted);}
+  .pain-list li:last-child{border-bottom:none;}
+  .pain-list .mark{color:var(--error);font-weight:700;flex-shrink:0;}
+  .solution-col{background:var(--ink-950);color:var(--text-on-ink);border-radius:var(--radius-lg);padding:40px;}
+  .solution-col h2{color:var(--paper-50);}
+  .solution-col p{color:var(--text-on-ink-muted);margin-top:16px;font-size:16px;}
+  .solution-steps{margin-top:26px;display:flex;flex-direction:column;gap:16px;}
+  .solution-steps li{display:flex;gap:14px;align-items:flex-start;font-size:14px;color:var(--text-on-ink-muted);}
+  .solution-steps .num{
+    flex-shrink:0;width:26px;height:26px;border-radius:8px;background:var(--lime-400);color:var(--ink-950);
+    display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;font-family:'Space Grotesk';
+  }
+
+  /* ---------- FEATURE SHOWCASE (TABS) ---------- */
+  .showcase-head{text-align:center;max-width:640px;margin:0 auto 44px;}
+  .showcase-head h2{font-size:clamp(26px,3.2vw,36px);}
+  .showcase-head p{margin-top:14px;color:var(--text-on-paper-muted);font-size:16px;}
+  .tabs{display:flex;justify-content:center;gap:10px;margin-bottom:40px;flex-wrap:wrap;}
+  .tab-btn{
+    padding:13px 24px;border-radius:999px;border:1.5px solid var(--paper-200);background:var(--paper-50);
+    font-weight:600;font-size:15px;color:var(--text-on-paper-muted);transition:.18s ease;
+  }
+  .tab-btn.active{border-color:var(--ink-950);background:var(--ink-950);color:var(--paper-50);}
+
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;animation:fadein .35s ease;}
+  @keyframes fadein{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+  .feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;}
+  @media (max-width:860px){ .feature-grid{grid-template-columns:1fr;gap:32px;} }
+  .feature-points{display:flex;flex-direction:column;gap:22px;}
+  .feature-point{display:flex;gap:16px;}
+  .feature-point .ico{
+    flex-shrink:0;width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+    background:var(--paper-100);
+  }
+  .feature-point h3{font-size:17px;margin-bottom:6px;}
+  .feature-point p{font-size:14.5px;color:var(--text-on-paper-muted);}
+
+  .poster-mock{
+    border-radius:var(--radius-lg);padding:34px;background:var(--ink-950);color:var(--text-on-ink);
+    min-height:420px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;
+  }
+  .poster-mock::before{
+    content:"";position:absolute;inset:0;
+    background:radial-gradient(circle at 15% 85%, rgba(204,255,102,0.18), transparent 55%);
+  }
+  .poster-top{position:relative;z-index:1;}
+  .poster-top .display{font-size:30px;line-height:1.05;color:var(--paper-50);}
+  .poster-top .sub{color:var(--lime-400);font-size:13px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;margin-top:10px;display:block;}
+  .poster-qr{
+    position:relative;z-index:1;
+    align-self:flex-start;
+    background:var(--paper-50);color:var(--ink-950);
+    border-radius:var(--radius-md);padding:16px 18px;
+    display:flex;align-items:center;gap:14px;
+  }
+  .qr-swatch{width:52px;height:52px;border-radius:8px;background:
+    repeating-conic-gradient(#0B0A10 0% 25%, #FAF9F6 0% 50%) 0 0/13px 13px;}
+  .poster-qr .ptxt{font-size:12px;color:var(--text-on-paper-muted);}
+  .poster-qr .pval{font-family:'Space Grotesk';font-weight:700;font-size:14px;}
+
+  .card-mock{
+    border-radius:var(--radius-lg);padding:34px;background:linear-gradient(155deg, var(--paper-100), var(--paper-50));
+    border:1px solid var(--paper-200);
+    min-height:420px;display:flex;flex-direction:column;justify-content:space-between;
+  }
+  .card-mock .display{font-size:28px;}
+  .stars{color:var(--gold-500);font-size:20px;letter-spacing:2px;margin-top:12px;}
+  .review-pop{
+    background:var(--paper-50);border:1px solid var(--paper-200);border-radius:var(--radius-md);
+    padding:16px 18px;box-shadow:var(--shadow-card);
+  }
+  .review-pop .ptxt{font-size:12px;color:var(--text-on-paper-muted);}
+  .review-pop .pval{font-family:'Space Grotesk';font-weight:700;font-size:14px;}
+
+  /* ---------- TESTIMONIALS ---------- */
+  .testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+  @media (max-width:860px){ .testi-grid{grid-template-columns:1fr;} }
+  .testi-card{
+    background:var(--paper-50);border:1px solid var(--paper-200);border-radius:var(--radius-lg);
+    padding:28px;box-shadow:var(--shadow-card);display:flex;flex-direction:column;gap:18px;
+  }
+  .testi-quote{font-size:15.5px;color:var(--text-on-paper);line-height:1.6;}
+  .testi-person{display:flex;align-items:center;gap:12px;}
+  .avatar{
+    width:42px;height:42px;border-radius:50%;background:var(--violet-500);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-weight:700;font-family:'Space Grotesk';font-size:15px;
+  }
+  .testi-person .name{font-weight:600;font-size:14px;}
+  .testi-person .role{font-size:13px;color:var(--text-on-paper-muted);}
+
+  /* ---------- PRICING ---------- */
+  .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:stretch;}
+  @media (max-width:960px){ .pricing-grid{grid-template-columns:1fr;} }
+  .price-card{
+    background:var(--paper-50);border:1.5px solid var(--paper-200);border-radius:var(--radius-lg);
+    padding:34px 28px;display:flex;flex-direction:column;gap:22px;position:relative;
+  }
+  .price-card.highlight{
+    border-color:var(--ink-950);background:var(--ink-950);color:var(--text-on-ink);
+    transform:translateY(-8px);
+  }
+  .price-card.highlight .price-desc, .price-card.highlight .plist li{color:var(--text-on-ink-muted);}
+  .price-badge{
+    position:absolute;top:-13px;left:28px;background:var(--lime-400);color:var(--ink-950);
+    font-size:12px;font-weight:700;padding:5px 14px;border-radius:999px;
+  }
+  .price-name{font-family:'Space Grotesk';font-weight:600;font-size:19px;}
+  .price-desc{font-size:14px;color:var(--text-on-paper-muted);}
+  .price-amount{font-family:'Space Grotesk';font-size:38px;font-weight:700;}
+  .price-amount span{font-size:15px;font-weight:500;opacity:0.7;}
+  .plist{display:flex;flex-direction:column;gap:12px;}
+  .plist li{display:flex;gap:10px;font-size:14px;color:var(--text-on-paper-muted);align-items:flex-start;}
+  .plist li .tick{color:var(--success);flex-shrink:0;font-weight:700;}
+  .price-card.highlight .plist li .tick{color:var(--lime-400);}
+  .pricing-note{text-align:center;margin-top:30px;font-size:13.5px;color:var(--text-on-paper-muted);}
+
+  /* ---------- FAQ ---------- */
+  .faq-list{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:12px;}
+  details{
+    background:var(--paper-100);border-radius:var(--radius-md);border:1px solid var(--paper-200);
+    padding:6px 22px;
+  }
+  summary{
+    cursor:pointer;list-style:none;padding:18px 0;font-weight:600;font-size:15.5px;
+    display:flex;justify-content:space-between;align-items:center;gap:16px;
+  }
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+";font-size:22px;font-weight:400;color:var(--text-on-paper-muted);flex-shrink:0;transition:transform .2s ease;}
+  details[open] summary::after{transform:rotate(45deg);}
+  details[open] summary{padding-bottom:6px;}
+  .faq-answer{padding:0 0 20px;font-size:14.5px;color:var(--text-on-paper-muted);}
+
+  /* ---------- CONTACT ---------- */
+  .contact-wrap{
+    display:grid;grid-template-columns:0.9fr 1.1fr;gap:56px;
+    background:var(--ink-950);color:var(--text-on-ink);
+    border-radius:var(--radius-lg);padding:52px;
+  }
+  @media (max-width:900px){ .contact-wrap{grid-template-columns:1fr;padding:32px;gap:36px;} }
+  .contact-info h2{color:var(--paper-50);font-size:clamp(24px,3vw,32px);}
+  .contact-info p{color:var(--text-on-ink-muted);margin-top:16px;font-size:15px;}
+  .contact-direct{margin-top:26px;display:flex;flex-direction:column;gap:10px;}
+  .contact-direct a{font-weight:600;color:var(--lime-400);font-size:15px;}
+
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media (max-width:560px){ .form-grid{grid-template-columns:1fr;} }
+  .field{display:flex;flex-direction:column;gap:6px;}
+  .field.full{grid-column:1/-1;}
+  label{font-size:13px;color:var(--text-on-ink-muted);font-weight:500;}
+  input, textarea, select{
+    background:rgba(245,243,239,0.06);border:1px solid rgba(245,243,239,0.18);
+    border-radius:var(--radius-sm);padding:13px 14px;color:var(--text-on-ink);font-size:14.5px;font-family:inherit;
+  }
+  input::placeholder, textarea::placeholder{color:rgba(171,166,184,0.6);}
+  textarea{resize:vertical;min-height:110px;}
+  .form-note{font-size:12.5px;color:var(--text-on-ink-muted);margin-top:4px;}
+  .form-status{font-size:13.5px;margin-top:10px;min-height:18px;}
+  .form-status.ok{color:var(--lime-400);}
+  .form-status.err{color:#F5A3A3;}
+
+  /* ---------- FOOTER ---------- */
+  footer{padding:56px 0 32px;border-top:1px solid var(--paper-200);}
+  .footer-grid{display:flex;justify-content:space-between;flex-wrap:wrap;gap:32px;margin-bottom:36px;}
+  .footer-cols{display:flex;gap:56px;flex-wrap:wrap;}
+  .footer-col h4{font-size:13px;font-weight:600;color:var(--text-on-paper-muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:14px;}
+  .footer-col a{display:block;font-size:14px;color:var(--text-on-paper);padding:6px 0;}
+  .footer-bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--text-on-paper-muted);border-top:1px solid var(--paper-200);padding-top:24px;}
+
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="logo"><span class="logo-dot"></span>TAPIN</div>
+    <nav class="nav-links" id="navLinks">
+      <a href="#comment-ca-marche">Comment ça marche</a>
+      <a href="#offres">Nos offres</a>
+      <a href="#tarifs">Tarifs</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="nav-cta">
+      <a href="#contact" class="btn btn-ghost" style="padding:10px 20px;min-height:auto;">Demander un devis</a>
+      <button class="burger" id="burgerBtn" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navLinks">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">Cartes & stickers NFC + QR code</span>
+      <h1>Un tap suffit pour laisser un avis, suivre un compte ou lancer une soirée.</h1>
+      <p class="hero-sub">TAPIN équipe les commerces et les organisateurs d'événements de supports NFC et QR code intelligents : avis Google en un geste pour les uns, parcours Strava ou programme de soirée pour les autres.</p>
+      <div class="hero-ctas">
+        <a href="#offres" class="btn btn-primary">Voir les offres Commerce</a>
+        <a href="#offres" class="btn btn-ghost">Voir les offres Événements</a>
+      </div>
+      <p class="hero-note">Sans engagement · Design personnalisé · Devis sous 24-48h</p>
+    </div>
+
+    <div class="hero-visual">
+      <div class="mode-toggle" role="tablist" aria-label="Aperçu du support">
+        <button type="button" class="active" data-mode="commerce" role="tab" aria-selected="true">Commerce</button>
+        <button type="button" data-mode="event" role="tab" aria-selected="false">Soirée</button>
+      </div>
+      <div class="device-card" id="heroDevice">
+        <div class="device-top">
+          <div class="device-chip" id="deviceChip">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12a8 8 0 0 1 16 0"/><path d="M7.5 12a4.5 4.5 0 0 1 9 0"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg>
+          </div>
+          <span class="device-tag" id="deviceTag">Carte comptoir</span>
+        </div>
+        <div class="device-mid">
+          <p class="display" id="deviceTitle">Approchez votre téléphone</p>
+          <p id="deviceSub">La fiche avis Google s'ouvre directement — sans chercher, sans taper.</p>
+        </div>
+        <div class="device-bottom">
+          <span class="label" id="deviceBottomLabel">Redirige vers</span>
+          <span class="value" id="deviceBottomValue">Avis Google ★★★★★</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SOCIAL PROOF ================= -->
+<div class="proof-bar">
+  <div class="wrap">
+    <p class="proof-label">Pensé pour tous les lieux où un lien mérite d'être vu au bon moment</p>
+    <div class="proof-chips">
+      <span class="chip">🍽️ Restaurants</span>
+      <span class="chip">💇 Salons & instituts</span>
+      <span class="chip">🛍️ Commerces de proximité</span>
+      <span class="chip">🏃 Run clubs</span>
+      <span class="chip">🎓 Soirées étudiantes</span>
+      <span class="chip">🎧 Boîtes de nuit</span>
+    </div>
+  </div>
+</div>
+
+<!-- ================= PROBLEM / SOLUTION ================= -->
+<section id="comment-ca-marche">
+  <div class="wrap problem-grid">
+    <div>
+      <span class="eyebrow">Le constat</span>
+      <h2>Obtenir un avis ou un follow, ça prend 10 secondes… si la personne y pense.</h2>
+      <ul class="pain-list">
+        <li><span class="mark">✕</span> Les avis Google se perdent entre la sortie du client et le moment où il y pense vraiment.</li>
+        <li><span class="mark">✕</span> Demander à l'oral de suivre le compte Instagram fonctionne rarement.</li>
+        <li><span class="mark">✕</span> Les flyers de soirée finissent au sol avant la fin de la nuit, avec le lien Strava ou le programme dessus.</li>
+        <li><span class="mark">✕</span> Un lien mal placé, c'est une opportunité de visibilité perdue.</li>
+      </ul>
+    </div>
+    <div class="solution-col">
+      <span class="eyebrow" style="color:var(--lime-400);">La solution</span>
+      <h2>Le lien arrive au bon moment, sur le bon support.</h2>
+      <p>Une carte NFC sur le comptoir, un sticker en vitrine, une affiche à l'entrée d'une soirée : un tap ou un scan, et la bonne page s'ouvre — au moment exact où la personne est réceptive.</p>
+      <ul class="solution-steps">
+        <li><span class="num">1</span> On définit ensemble le lien de destination (avis Google, Instagram, Strava, programme…)</li>
+        <li><span class="num">2</span> On imprime et on programme les cartes, stickers ou affiches</li>
+        <li><span class="num">3</span> Vous les installez, et vous changez le lien de destination quand vous voulez</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FEATURE SHOWCASE (TABS) ================= -->
+<section id="offres" style="background:var(--paper-100);">
+  <div class="wrap">
+    <div class="showcase-head">
+      <span class="eyebrow" style="justify-content:center;">Nos deux offres</span>
+      <h2>Un même système, deux usages bien différents.</h2>
+      <p>On sépare volontairement les deux univers : un commerçant et un organisateur de soirée n'ont ni le même besoin, ni le même moment d'usage. Choisissez votre onglet pour voir le détail.</p>
+    </div>
+
+    <div class="tabs" role="tablist" aria-label="Offres">
+      <button class="tab-btn active" data-tab="commerce" role="tab" aria-selected="true">🏪 Commerces</button>
+      <button class="tab-btn" data-tab="event" role="tab" aria-selected="false">🎉 Soirées & clubs</button>
+    </div>
+
+    <div class="tab-panel active" data-panel="commerce">
+      <div class="feature-grid">
+        <div class="feature-points">
+          <div class="feature-point">
+            <div class="ico">⭐</div>
+            <div><h3>Avis Google en un tap</h3><p>Le tag NFC ou le QR code ouvre directement la fenêtre de dépôt d'avis, sans passer par une recherche.</p></div>
+          </div>
+          <div class="feature-point">
+            <div class="ico">📸</div>
+            <div><h3>Lien Instagram intégré</h3><p>Une deuxième destination possible, ou une page qui laisse le client choisir : avis ou abonnement.</p></div>
+          </div>
+          <div class="feature-point">
+            <div class="ico">📶</div>
+            <div><h3>QR code de secours</h3><p>Chaque support NFC est doublé d'un QR code imprimé pour les téléphones qui ne supportent pas le sans-contact.</p></div>
+          </div>
+          <div class="feature-point">
+            <div class="ico">📈</div>
+            <div><h3>Suivi des scans</h3><p>Une estimation du nombre de tap et de scans, pour savoir si le support est bien placé.</p></div>
+          </div>
+        </div>
+        <div class="card-mock">
+          <div>
+            <p class="display">Café des Arts</p>
+            <p style="color:var(--text-on-paper-muted);font-size:14px;margin-top:6px;">Carte NFC comptoir</p>
+            <div class="stars">★★★★★</div>
+          </div>
+          <div class="review-pop">
+            <p class="ptxt">Un tap ouvre</p>
+            <p class="pval">Laisser un avis Google</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-panel" data-panel="event">
+      <div class="feature-grid">
+        <div class="poster-mock">
+          <div class="poster-top">
+            <p class="display">Sunday Run Club</p>
+            <span class="sub">Affiche NFC + QR</span>
+          </div>
+          <div class="poster-qr">
+            <div class="qr-swatch"></div>
+            <div><p class="ptxt">Un scan ouvre</p><p class="pval">Le parcours Strava du jour</p></div>
+          </div>
+        </div>
+        <div class="feature-points">
+          <div class="feature-point">
+            <div class="ico">🏃</div>
+            <div><h3>Parcours Strava en direct</h3><p>Idéal pour les run clubs : le lien pointe vers le parcours du jour, modifiable à chaque sortie.</p></div>
+          </div>
+          <div class="feature-point">
+            <div class="ico">🗓️</div>
+            <div><h3>Programme de soirée</h3><p>Line-up, horaires, dress code ou règles de l'événement, accessibles en un scan depuis l'affiche à l'entrée.</p></div>
+          </div>
+          <div class="feature-point">
+            <div class="ico">🎧</div>
+            <div><h3>Pensé pour boîtes et soirées étudiantes</h3><p>Un sticker NFC discret sur un flyer ou une affiche grand format, à l'entrée ou sur les tables.</p></div>
+          </div>
+          <div class="feature-point">
+            <div class="ico">🔄</div>
+            <div><h3>Contenu modifiable après impression</h3><p>Le support physique ne change pas, mais la page de destination peut être mise à jour pour chaque événement.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TESTIMONIALS ================= -->
+<section>
+  <div class="wrap">
+    <div class="showcase-head">
+      <span class="eyebrow" style="justify-content:center;">Ils ont testé</span>
+      <h2>Des retours concrets, sur des usages différents.</h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <p class="testi-quote">"Avant, on demandait à l'oral en fin de repas. Maintenant la carte est sur la table, les clients scannent en attendant l'addition."</p>
+        <div class="testi-person">
+          <div class="avatar">L</div>
+          <div><p class="name">Léa</p><p class="role">Gérante d'un salon de coiffure</p></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <p class="testi-quote">"On changeait le parcours toutes les semaines sur l'appli, mais personne ne savait où le trouver. Avec l'affiche NFC, tout le monde tape et suit direct."</p>
+        <div class="testi-person">
+          <div class="avatar">M</div>
+          <div><p class="name">Marc</p><p class="role">Organisateur d'un run club</p></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <p class="testi-quote">"Le programme de la soirée était sur un flyer qu'on perdait en dix minutes. Là, il suffit de scanner l'affiche à l'entrée pour tout retrouver."</p>
+        <div class="testi-person">
+          <div class="avatar">Y</div>
+          <div><p class="name">Yanis</p><p class="role">Organisateur de soirées étudiantes</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PRICING ================= -->
+<section id="tarifs" style="background:var(--paper-100);">
+  <div class="wrap">
+    <div class="showcase-head">
+      <span class="eyebrow" style="justify-content:center;">Tarifs</span>
+      <h2>Des formules simples, sans abonnement caché.</h2>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div>
+          <p class="price-name">Commerce Essentiel</p>
+          <p class="price-desc">Pour démarrer avec l'avis Google</p>
+        </div>
+        <p class="price-amount">49€ <span>/ paiement unique</span></p>
+        <ul class="plist">
+          <li><span class="tick">✓</span> 1 carte NFC comptoir</li>
+          <li><span class="tick">✓</span> 1 QR code imprimé assorti</li>
+          <li><span class="tick">✓</span> Lien vers votre fiche avis Google</li>
+          <li><span class="tick">✓</span> Support et mise à jour du lien pendant 12 mois</li>
+        </ul>
+        <a href="#contact" class="btn btn-ghost btn-block">Demander un devis</a>
+      </div>
+
+      <div class="price-card highlight">
+        <span class="price-badge">Le plus choisi</span>
+        <div>
+          <p class="price-name">Commerce Pro</p>
+          <p class="price-desc">Avis Google + Instagram, plusieurs points de contact</p>
+        </div>
+        <p class="price-amount">89€ <span>/ paiement unique</span></p>
+        <ul class="plist">
+          <li><span class="tick">✓</span> 2 cartes NFC + stickers vitrine</li>
+          <li><span class="tick">✓</span> Lien double : avis Google et Instagram</li>
+          <li><span class="tick">✓</span> Estimation du nombre de scans</li>
+          <li><span class="tick">✓</span> Mises à jour du lien illimitées</li>
+        </ul>
+        <a href="#contact" class="btn btn-accent btn-block">Demander un devis</a>
+      </div>
+
+      <div class="price-card">
+        <div>
+          <p class="price-name">Pack Soirée / Événement</p>
+          <p class="price-desc">Pour run clubs, soirées et boîtes de nuit</p>
+        </div>
+        <p class="price-amount">à partir de 129€</p>
+        <ul class="plist">
+          <li><span class="tick">✓</span> 10 affiches avec sticker NFC + QR intégré</li>
+          <li><span class="tick">✓</span> Lien modifiable (Strava, programme, playlist…)</li>
+          <li><span class="tick">✓</span> Design d'affiche personnalisable en option</li>
+          <li><span class="tick">✓</span> Tarif dégressif au-delà de 10 affiches</li>
+        </ul>
+        <a href="#contact" class="btn btn-ghost btn-block">Demander un devis</a>
+      </div>
+    </div>
+    <p class="pricing-note">Tarifs indicatifs pour un lancement — un devis précis est établi selon le nombre de points de vente ou d'affiches nécessaires.</p>
+  </div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section id="faq">
+  <div class="wrap">
+    <div class="showcase-head">
+      <span class="eyebrow" style="justify-content:center;">Questions fréquentes</span>
+      <h2>Avant de se lancer</h2>
+    </div>
+    <div class="faq-list">
+      <details>
+        <summary>Est-ce compatible avec tous les téléphones ?</summary>
+        <p class="faq-answer">La technologie NFC est présente sur la quasi-totalité des smartphones récents (iPhone et Android). Pour les rares téléphones non compatibles ou lorsque la fonction NFC est désactivée, chaque support est doublé d'un QR code imprimé qui fonctionne avec n'importe quel appareil photo.</p>
+      </details>
+      <details>
+        <summary>Que se passe-t-il si le tag NFC ne fonctionne pas ?</summary>
+        <p class="faq-answer">Le QR code présent sur le même support prend automatiquement le relais : la personne scanne avec son appareil photo et arrive sur la même page de destination. Vous n'êtes jamais dépendant d'une seule technologie.</p>
+      </details>
+      <details>
+        <summary>Puis-je changer le lien de destination à tout moment ?</summary>
+        <p class="faq-answer">Oui. Le support physique (carte, sticker ou affiche) ne change pas, mais la page vers laquelle il redirige peut être mise à jour à tout moment : nouveau parcours Strava, nouveau programme de soirée, nouvelle campagne Instagram.</p>
+      </details>
+      <details>
+        <summary>Combien de temps pour recevoir mes cartes ou affiches ?</summary>
+        <p class="faq-answer">Comptez en moyenne 5 jours ouvrés entre la validation du design et la réception, selon la quantité commandée et les options de personnalisation choisies.</p>
+      </details>
+      <details>
+        <summary>Y a-t-il un engagement ou un abonnement obligatoire ?</summary>
+        <p class="faq-answer">Non, les formules Commerce sont vendues en paiement unique. Le suivi des scans et la mise à jour du lien sont inclus sans coût récurrent obligatoire ; une offre de suivi avancé reste disponible en option si vous le souhaitez.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section id="contact">
+  <div class="wrap">
+    <div class="contact-wrap">
+      <div class="contact-info">
+        <span class="eyebrow" style="color:var(--lime-400);">Contact</span>
+        <h2>On équipe votre commerce ou votre prochaine soirée ?</h2>
+        <p>Décrivez votre projet en quelques lignes — nombre de points de vente, type d'événement, quantité souhaitée — et vous recevez un devis personnalisé sous 24 à 48h.</p>
+        <div class="contact-direct">
+          <a href="mailto:contact@tapin.fr">contact@tapin.fr</a>
+        </div>
+      </div>
+      <form id="contactForm">
+        <div class="form-grid">
+          <div class="field">
+            <label for="fname">Nom</label>
+            <input type="text" id="fname" name="fname" placeholder="Votre nom" required>
+          </div>
+          <div class="field">
+            <label for="femail">Email</label>
+            <input type="email" id="femail" name="femail" placeholder="vous@exemple.fr" required>
+          </div>
+          <div class="field full">
+            <label for="ftype">Type de projet</label>
+            <select id="ftype" name="ftype">
+              <option value="Commerce">Commerce (avis Google / Instagram)</option>
+              <option value="Événement">Événement / soirée / run club</option>
+              <option value="Autre">Autre</option>
+            </select>
+          </div>
+          <div class="field full">
+            <label for="fmessage">Message</label>
+            <textarea id="fmessage" name="fmessage" placeholder="Parlez-nous de votre commerce ou de votre événement…" required></textarea>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-accent btn-block" style="margin-top:18px;">Envoyer la demande</button>
+        <p class="form-note">En envoyant ce formulaire, votre application de messagerie s'ouvre avec un message pré-rempli à destination de contact@tapin.fr.</p>
+        <p class="form-status" id="formStatus" role="status"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="logo"><span class="logo-dot"></span>TAPIN</div>
+        <p style="color:var(--text-on-paper-muted);font-size:14px;margin-top:12px;max-width:32ch;">Cartes NFC et QR code pour commerces et événements.</p>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h4>Site</h4>
+          <a href="#comment-ca-marche">Comment ça marche</a>
+          <a href="#offres">Nos offres</a>
+          <a href="#tarifs">Tarifs</a>
+          <a href="#faq">FAQ</a>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <a href="mailto:contact@tapin.fr">contact@tapin.fr</a>
+          <a href="#contact">Demander un devis</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 TAPIN. Tous droits réservés.</span>
+      <span>Mentions légales · CGV</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ---- Menu mobile ----
+  const burger = document.getElementById('burgerBtn');
+  const navLinks = document.getElementById('navLinks');
+  burger.addEventListener('click', () => {
+    const isOpen = navLinks.classList.toggle('open');
+    burger.setAttribute('aria-expanded', isOpen);
+  });
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+    burger.setAttribute('aria-expanded', 'false');
+  }));
+
+  // ---- Toggle hero Commerce / Soirée ----
+  const modeButtons = document.querySelectorAll('.mode-toggle button');
+  const heroDevice = document.getElementById('heroDevice');
+  const deviceChip = document.getElementById('deviceChip');
+  const deviceTag = document.getElementById('deviceTag');
+  const deviceTitle = document.getElementById('deviceTitle');
+  const deviceSub = document.getElementById('deviceSub');
+  const deviceBottomLabel = document.getElementById('deviceBottomLabel');
+  const deviceBottomValue = document.getElementById('deviceBottomValue');
+
+  const modes = {
+    commerce: {
+      accent: 'var(--gold-400)',
+      tag: 'Carte comptoir',
+      title: 'Approchez votre téléphone',
+      sub: "La fiche avis Google s'ouvre directement — sans chercher, sans taper.",
+      bottomLabel: 'Redirige vers',
+      bottomValue: 'Avis Google ★★★★★'
+    },
+    event: {
+      accent: 'var(--lime-400)',
+      tag: 'Affiche évènement',
+      title: 'Scannez avant d\u2019entrer',
+      sub: "Le programme de la soirée ou le parcours du run s'affiche instantanément.",
+      bottomLabel: 'Redirige vers',
+      bottomValue: 'Parcours Strava du jour'
+    }
+  };
+
+  modeButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      modeButtons.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected','true');
+      const m = modes[btn.dataset.mode];
+      heroDevice.style.setProperty('--accent', m.accent);
+      document.documentElement.style.setProperty('--accent', m.accent);
+      deviceTag.textContent = m.tag;
+      deviceTitle.textContent = m.title;
+      deviceSub.textContent = m.sub;
+      deviceBottomLabel.textContent = m.bottomLabel;
+      deviceBottomValue.textContent = m.bottomValue;
+    });
+  });
+
+  // ---- Tabs Commerce / Événement (feature showcase) ----
+  const tabButtons = document.querySelectorAll('.tab-btn');
+  const tabPanels = document.querySelectorAll('.tab-panel');
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabButtons.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+      tabPanels.forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected','true');
+      document.querySelector(`.tab-panel[data-panel="${btn.dataset.tab}"]`).classList.add('active');
+    });
+  });
+
+  // ---- Formulaire de contact (mailto, pas de backend) ----
+  const form = document.getElementById('contactForm');
+  const formStatus = document.getElementById('formStatus');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('fname').value.trim();
+    const email = document.getElementById('femail').value.trim();
+    const type = document.getElementById('ftype').value;
+    const message = document.getElementById('fmessage').value.trim();
+
+    if(!name || !email || !message){
+      formStatus.textContent = "Merci de compléter tous les champs obligatoires.";
+      formStatus.className = "form-status err";
+      return;
+    }
+
+    const subject = encodeURIComponent(`Demande de devis TAPIN — ${type}`);
+    const body = encodeURIComponent(
+`Nom : ${name}
+Email : ${email}
+Type de projet : ${type}
+
+Message :
+${message}`
+    );
+    window.location.href = `mailto:contact@tapin.fr?subject=${subject}&body=${body}`;
+    formStatus.textContent = "Votre messagerie va s'ouvrir avec la demande pré-remplie.";
+    formStatus.className = "form-status ok";
+  });
+</script>
+
+</body>
+</html>
